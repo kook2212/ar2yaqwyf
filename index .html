@@ -20,8 +20,10 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #f0f2f5; /* 淡灰色背景，突顯卡片 */
             display: flex;
-            justify-content: center;
-            align-items: flex-start; /* 從頂部開始對齊 */
+            /* 【重要修改】修改 flex 排列方式 */
+            flex-direction: column; /* 讓卡片和下方的文字垂直排列 */
+            justify-content: flex-start; /* 保持從頂部開始對齊 */
+            align-items: center; /* 水平置中所有內容 */
             min-height: 100vh;
             padding: 20px;
             box-sizing: border-box;
@@ -63,7 +65,6 @@
             font-size: 48px;
             font-weight: 700;
             color: #495057;
-            /* 如果您有照片，請刪除下面的 background-color 到 color 的所有行，並在 img 標籤中加入 src */
         }
         .avatar img {
             width: 100%;
@@ -157,6 +158,7 @@
             font-size: 15px;
             transition: all 0.3s;
             text-align: center;
+            cursor: pointer;
         }
         .btn-primary {
             background-color: #ff8c00;
@@ -176,6 +178,14 @@
             background-color: #d8dcdf;
         }
 
+        /* --- 【重要修改】新增頁腳樣式 --- */
+        .powered-by {
+            margin-top: 25px; /* 與卡片之間的距離 */
+            margin-bottom: 10px; /* 與頁面底部的距離 */
+            font-size: 14px;
+            color: #888888; /* 使用較淡的顏色，不搶風頭 */
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -183,14 +193,7 @@
     <!-- 卡片開始 -->
     <div class="card">
         <div class="card-header">
-            <!-- 
-                頭像區塊：
-                1. 如果您沒有照片，現在會顯示姓名縮寫 "偉德"。
-                2. 如果您有照片，請將照片檔案 (例如 myphoto.jpg) 和這個 html 檔案放在同一個資料夾，
-                   然後刪除下面的 <div class="avatar">...</div>，並取消註解下面的 <img ... /> 標籤。
-            -->
             <div class="avatar">偉德</div>
-            <!-- <img src="myphoto.jpg" alt="張偉德頭像" class="avatar"> -->
         </div>
 
         <div class="card-body">
@@ -241,19 +244,84 @@
 
             <!-- 互動按鈕區 -->
             <div class="button-container">
-                <!-- 
-                    這個按鈕讓別人可以一鍵將您的聯絡資訊存到手機通訊錄。
-                    您需要建立一個 contact.vcf 檔案，並和這個 html 檔案放在一起。
-                    詳細製作方法請看下方的教學。
-                -->
-                <a href="contact.vcf" class="btn btn-primary">儲存聯絡資訊到手機</a>
-
-                <a href="http://leitung-dachostel.hklss.hk" target="_blank" class="btn btn-secondary">訪問機構網站</a>
-                <a href="https://www.google.com/maps/search/?api=1&query=Lei+Tung+Lutheran+Day+Activity+Centre" target="_blank" class="btn btn-secondary">導航至展能中心</a>
+                <a id="downloadVcfBtn" href="#" class="btn btn-primary">儲存聯絡人 (VCF)</a>
+                <a href="https://www.hklss.hk/hk/service-information/r-division/123-r05" target="_blank" class="btn btn-secondary">訪問機構網站</a>
+                <a href="https://maps.app.goo.gl/s89XE8EGHjZphTdg7" target="_blank" class="btn btn-secondary">導航至展能中心</a>
+                <a href="https://maps.app.goo.gl/4qZ1C2RyCEL584mG7" target="_blank" class="btn btn-secondary">導航至宿舍</a>
             </div>
         </div>
     </div>
     <!-- 卡片結束 -->
 
+    <!-- 【重要修改】新增頁腳 -->
+    <footer class="powered-by">
+        Power by 張先生
+    </footer>
+
+    <!-- JavaScript 區域 -->
+    <script>
+        // 1. 將所有聯絡人資料集中管理在一個物件中，方便取用和修改
+        const contactInfo = {
+            lastName: '張',
+            firstName: '偉德',
+            fullName: '張偉德 Cheung Wai Tak, Dicky',
+            title: '主任 (Officer-in-charge) / 註冊社工 (RSW)',
+            fileName: 'Cheung_Wai_Tak_Dicky_Contact', // 用於檔案名稱
+            
+            // 第一個機構的資料
+            org1: {
+                name: '路德會利東展能中心',
+                tel: '2871 1013',
+                fax: '2871 1381',
+                email: 'r04@hklss.hk',
+                address: '香港鴨脷洲利東邨東逸樓217-224號'
+            },
+            
+            // 第二個機構的資料
+            org2: {
+                name: '路德會利東宿舍',
+                tel: '2871 1282',
+                fax: '2871 1282',
+                email: 'r05@hklss.hk',
+                address: '香港鴨脷洲利東邨東安樓118-123號'
+            },
+            
+            website: 'https://www.hklss.hk/hk/service-information/r-division/123-r05'
+        };
+
+        // 2. 準備生成 VCF 檔案內容的函數
+        function generateVcfData(data) {
+            const vcfContent = `BEGIN:VCARD
+VERSION:3.0
+N;CHARSET=UTF-8:${data.lastName};${data.firstName};;;
+FN;CHARSET=UTF-8:${data.fullName}
+TITLE;CHARSET=UTF-8:${data.title}
+ORG;CHARSET=UTF-8:${data.org1.name}
+TEL;TYPE=WORK,VOICE:${data.org1.tel}
+TEL;TYPE=WORK,FAX:${data.org1.fax}
+EMAIL;TYPE=WORK:${data.org1.email}
+ADR;TYPE=WORK;CHARSET=UTF-8:;;${data.org1.address};;;;
+item1.ORG;CHARSET=UTF-8:${data.org2.name}
+item1.TEL;TYPE=WORK,VOICE:${data.org2.tel}
+item1.TEL;TYPE=WORK,FAX:${data.org2.fax}
+item1.EMAIL;TYPE=WORK:${data.org2.email}
+item1.ADR;TYPE=WORK;CHARSET=UTF-8:;;${data.org2.address};;;;
+URL;TYPE=WORK:${data.website}
+END:VCARD`;
+            return vcfContent;
+        }
+
+        // 3. 找到我們的下載按鈕
+        const vcfBtn = document.getElementById('downloadVcfBtn');
+
+        // 4. 為 VCF 按鈕添加點擊事件監聽器
+        vcfBtn.addEventListener('click', function(event) {
+            this.setAttribute('download', `${contactInfo.fileName}.vcf`);
+            const vcfData = generateVcfData(contactInfo);
+            const blob = new Blob([vcfData], { type: 'text/vcard;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            this.href = url;
+        });
+    </script>
 </body>
 </html>
