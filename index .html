@@ -20,9 +20,9 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #f0f2f5; /* 淡灰色背景，突顯卡片 */
             display: flex;
-            /* 【重要修改】修改 flex 排列方式 */
             flex-direction: column; /* 讓卡片和下方的文字垂直排列 */
-            justify-content: flex-start; /* 保持從頂部開始對齊 */
+            /* 【重要修改】將垂直對齊方式改為置中，以確保卡片和頁腳整體居中顯示 */
+            justify-content: center; 
             align-items: center; /* 水平置中所有內容 */
             min-height: 100vh;
             padding: 20px;
@@ -62,7 +62,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 48px;
+            font-size: 38px; /* 稍微縮小字體以容納英文名 */
             font-weight: 700;
             color: #495057;
         }
@@ -178,7 +178,7 @@
             background-color: #d8dcdf;
         }
 
-        /* --- 【重要修改】新增頁腳樣式 --- */
+        /* 頁腳樣式 */
         .powered-by {
             margin-top: 25px; /* 與卡片之間的距離 */
             margin-bottom: 10px; /* 與頁面底部的距離 */
@@ -193,7 +193,8 @@
     <!-- 卡片開始 -->
     <div class="card">
         <div class="card-header">
-            <div class="avatar">偉德</div>
+            <!-- 【重要修改】將頭像文字改為 "Dicky" -->
+            <div class="avatar">Dicky</div>
         </div>
 
         <div class="card-body">
@@ -253,7 +254,7 @@
     </div>
     <!-- 卡片結束 -->
 
-    <!-- 【重要修改】新增頁腳 -->
+    <!-- 頁腳 -->
     <footer class="powered-by">
         Power by 張先生
     </footer>
