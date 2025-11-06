@@ -21,8 +21,8 @@
             background-color: #f0f2f5; /* 淡灰色背景，突顯卡片 */
             display: flex;
             flex-direction: column; /* 讓卡片和下方的文字垂直排列 */
-            /* 【重要修改】將垂直對齊方式改為置中，以確保卡片和頁腳整體居中顯示 */
-            justify-content: center; 
+            /* 【重要修改】修改 justify-content 將頁腳推至底部 */
+            justify-content: space-between; /* 將內容推向頂部和底部 */
             align-items: center; /* 水平置中所有內容 */
             min-height: 100vh;
             padding: 20px;
@@ -38,6 +38,8 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden; /* 確保內容不會超出圓角 */
             text-align: center;
+            /* 【新增】增加與頂部的距離，避免緊貼螢幕邊緣 */
+            margin-top: 20px;
         }
 
         /* 卡片頂部背景圖 */
@@ -62,7 +64,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 38px; /* 稍微縮小字體以容納英文名 */
+            /* 【修改】調整字體大小以適應英文名 */
+            font-size: 40px; 
             font-weight: 700;
             color: #495057;
         }
@@ -180,7 +183,7 @@
 
         /* 頁腳樣式 */
         .powered-by {
-            margin-top: 25px; /* 與卡片之間的距離 */
+            /* 【修改】移除 margin-top，由 flexbox 的 space-between 控制間距 */
             margin-bottom: 10px; /* 與頁面底部的距離 */
             font-size: 14px;
             color: #888888; /* 使用較淡的顏色，不搶風頭 */
@@ -193,7 +196,7 @@
     <!-- 卡片開始 -->
     <div class="card">
         <div class="card-header">
-            <!-- 【重要修改】將頭像文字改為 "Dicky" -->
+            <!-- 【修改】將頭像文字改為英文名 -->
             <div class="avatar">Dicky</div>
         </div>
 
