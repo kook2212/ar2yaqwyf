@@ -1,301 +1,99 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-HK">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    
-    <title>張偉德 (Dicky Cheung) - 數位名片</title>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTHK 本地新聞走馬燈</title>
+<style>
+  /* 網頁基本設定（黑色背景，適合電子看板） */
+  body {
+    background-color: #000000; /* 背景顏色：黑色 */
+    color: #FFFFFF;          /* 文字顏色：白色 */
+    font-size: 50px;         /* 字體大小：可以根據你的螢幕大小調大或調小 */
+    font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+    margin: 0;
+    padding: 15px 0;
+    overflow: hidden;        /* 隱藏捲軸 */
+  }
 
-        html, body {
-            overscroll-behavior-y: contain;
-        }
+  /* 走馬燈外層容器 */
+  .ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
-        body {
-            margin: 0;
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            min-height: 100vh;
-            padding: 15px 10px 60px 10px;
-            box-sizing: border-box;
-        }
+  /* 走馬燈動畫設定 */
+  .ticker {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%; /* 讓文字一開始藏在螢幕最右邊 */
+    /* 這裡的 80s 代表捲動一圈需要 80 秒，數字越大捲動越慢，可自行修改 */
+    animation: ticker 80s linear infinite; 
+  }
 
-        .card {
-            background-color: #ffffff;
-            max-width: 420px;
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            text-align: center;
-        }
+  /* 定義捲動的動畫軌跡 */
+  @keyframes ticker {
+    0%   { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+  }
 
-        .card-header {
-            background: linear-gradient(45deg, #ff8c00, #ffc107);
-            height: 120px;
-            position: relative;
-        }
-
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 5px solid #ffffff;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            position: absolute;
-            bottom: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #e9ecef;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 40px; 
-            font-weight: 700;
-            color: #495057;
-        }
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        .card-body {
-            padding: 80px 25px 25px 25px;
-        }
-
-        .name {
-            font-size: 26px;
-            font-weight: 700;
-            margin: 0;
-            color: #333;
-        }
-
-        .title {
-            font-size: 16px;
-            font-weight: 500;
-            color: #6c757d;
-            margin: 5px 0 25px 0;
-        }
-
-        .divider {
-            border: 0;
-            height: 1px;
-            background-color: #e9ecef;
-            margin: 25px 0;
-        }
-        
-        .info-section {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-        .info-section h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #ff8c00;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #f0f2f5;
-            padding-bottom: 5px;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 15px;
-        }
-        .info-item svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 15px;
-            fill: #6c757d;
-            flex-shrink: 0;
-        }
-        .info-item a {
-            color: #333;
-            text-decoration: none;
-            word-break: break-all;
-            transition: color 0.3s;
-        }
-        .info-item a:hover {
-            color: #ff8c00;
-        }
-
-        .button-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 25px;
-        }
-
-        .btn {
-            display: block;
-            padding: 12px 10px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 15px;
-            transition: all 0.3s;
-            text-align: center;
-            cursor: pointer;
-        }
-        .btn-primary {
-            background-color: #ff8c00;
-            color: #ffffff;
-            grid-column: 1 / -1;
-        }
-        .btn-primary:hover {
-            background-color: #e67e00;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(255, 140, 0, 0.4);
-        }
-        .btn-secondary {
-            background-color: #e9ecef;
-            color: #333;
-        }
-        .btn-secondary:hover {
-            background-color: #d8dcdf;
-        }
-
-        .powered-by {
-            margin-top: 20px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: #888888;
-            text-align: center;
-        }
-    </style>
+  /* 每條新聞之間的黃色分隔符號設計 */
+  .separator {
+    color: #FFCC00; /* 分隔號顏色：黃色 */
+    margin: 0 40px; /* 分隔號左右的空白距離 */
+  }
+</style>
 </head>
 <body>
 
-    <div class="card">
-        <div class="card-header">
-            <div class="avatar">Dicky</div>
-        </div>
-
-        <div class="card-body">
-            <h1 class="name">張偉德 Cheung Wai Tak, Dicky</h1>
-            <p class="title">主任 (Officer-in-charge) / 註冊社工 (RSW)</p>
-            
-            <div class="info-section">
-                <h3>路德會利東展能中心</h3>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                    <span>香港鴨脷洲利東邨東逸樓217-224號</span>
-                </div>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                    <a href="tel:+85228711013">2871 1013</a>
-                </div>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 18H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8-4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8-4H7V8h2v2zm4 0h-2V8h2v2z"/></svg>
-                    <span>傳真: 2871 1381</span>
-                </div>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    <a href="mailto:r04@hklss.hk">r04@hklss.hk</a>
-                </div>
-            </div>
-
-            <div class="info-section">
-                <h3>路德會利東宿舍</h3>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                    <span>香港鴨脷洲利東邨東安樓118-123號</span>
-                </div>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                    <a href="tel:+85228711282">2871 1282</a>
-                </div>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 18H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8-4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8-4H7V8h2v2zm4 0h-2V8h2v2z"/></svg>
-                    <span>傳真: 2871 1282</span>
-                </div>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>                    <a href="mailto:r05@hklss.hk">r05@hklss.hk</a>
-                </div>
-            </div>
-
-            <hr class="divider">
-
-            <div class="button-container">
-                <a id="downloadVcfBtn" href="#" class="btn btn-primary">儲存聯絡人 (VCF)</a>
-                <a href="https://www.hklss.hk/hk/service-information/r-division/123-r05" target="_blank" class="btn btn-secondary">訪問機構網站</a>
-                <a href="https://maps.app.goo.gl/s89XE8EGHjZphTdg7" target="_blank" class="btn btn-secondary">導航至展能中心</a>
-                <a href="https://maps.app.goo.gl/4qZ1C2RyCEL584mG7" target="_blank" class="btn btn-secondary">導航至宿舍</a>
-            </div>
-        </div>
+  <div class="ticker-wrap">
+    <div class="ticker" id="news-ticker">
+      正在載入最新香港電台本地新聞...
     </div>
+  </div>
 
-    <footer class="powered-by">
-        Power by 張先生
-    </footer>
+  <script>
+    // 香港電台本地新聞 RSS 網址 (根據你提供的圖片)
+    const rssUrl = "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml";
+    
+    // 使用 rss2json 免費服務來避開 CORS 阻擋問題
+    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
 
-    <script>
-        const contactInfo = {
-            lastName: '張',
-            firstName: '偉德',
-            fullName: '張偉德 Cheung Wai Tak, Dicky',
-            title: '主任 (Officer-in-charge) / 註冊社工 (RSW)',
-            fileName: 'Cheung_Wai_Tak_Dicky_Contact',
+    function fetchNews() {
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'ok') {
+            let newsText = "";
             
-            org1: {
-                name: '路德會利東展能中心',
-                tel: '2871 1013',
-                fax: '2871 1381',
-                email: 'r04@hklss.hk',
-                address: '香港鴨脷洲利東邨東逸樓217-224號'
-            },
+            // 讀取每一條新聞標題，並在後面加上黃色的菱形分隔號 ◆
+            data.items.forEach(item => {
+              newsText += `<span>${item.title}</span><span class="separator">◆</span>`;
+            });
             
-            org2: {
-                name: '路德會利東宿舍',
-                tel: '2871 1282',
-                fax: '2871 1282',
-                email: 'r05@hklss.hk',
-                address: '香港鴨脷洲利東邨東安樓118-123號'
-            },
+            // 將組合好的新聞文字放入網頁中
+            document.getElementById('news-ticker').innerHTML = newsText;
             
-            website: 'https://www.hklss.hk/hk/service-information/r-division/123-r05'
-        };
-
-        function generateVcfData(data) {
-            const vcfContent = `BEGIN:VCARD
-VERSION:3.0
-N;CHARSET=UTF-8:${data.lastName};${data.firstName};;;
-FN;CHARSET=UTF-8:${data.fullName}
-TITLE;CHARSET=UTF-8:${data.title}
-ORG;CHARSET=UTF-8:${data.org1.name}
-TEL;TYPE=WORK,VOICE:${data.org1.tel}
-TEL;TYPE=WORK,FAX:${data.org1.fax}
-EMAIL;TYPE=WORK:${data.org1.email}
-ADR;TYPE=WORK;CHARSET=UTF-8:;;${data.org1.address};;;;
-item1.ORG;CHARSET=UTF-8:${data.org2.name}
-item1.TEL;TYPE=WORK,VOICE:${data.org2.tel}
-item1.TEL;TYPE=WORK,FAX:${data.org2.fax}
-item1.EMAIL;TYPE=WORK:${data.org2.email}
-item1.ADR;TYPE=WORK;CHARSET=UTF-8:;;${data.org2.address};;;;
-URL;TYPE=WORK:${data.website}
-END:VCARD`;
-            return vcfContent;
-        }
-
-        const vcfBtn = document.getElementById('downloadVcfBtn');
-
-        vcfBtn.addEventListener('click', function(event) {
-            this.setAttribute('download', `${contactInfo.fileName}.vcf`);
-            const vcfData = generateVcfData(contactInfo);
-            const blob = new Blob([vcfData], { type: 'text/vcard;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            this.href = url;
+            // 每次載入新資料時，重新啟動動畫確保排版正確
+            const tickerElement = document.getElementById('news-ticker');
+            tickerElement.style.animation = 'none';
+            tickerElement.offsetHeight; /* 觸發重繪 */
+            tickerElement.style.animation = null; 
+          }
+        })
+        .catch(error => {
+          console.error('讀取新聞發生錯誤:', error);
+          document.getElementById('news-ticker').innerHTML = "暫時無法讀取新聞連線...<span class='separator'>◆</span>";
         });
-    </script>
+    }
+
+    // 網頁一打開就立刻抓取一次新聞
+    fetchNews();
+    
+    // 設定計時器：每 15 分鐘 (900000 毫秒) 自動重新抓取最新新聞
+    setInterval(fetchNews, 900000);
+  </script>
+
 </body>
 </html>
